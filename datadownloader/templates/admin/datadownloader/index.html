@@ -1,1 +1,18 @@
 {% extends "admin/index.html" %}
+{% block content %}
+<h1>Database Archive</h1>
+<ul>
+    <li>Last build: {{ db_info.date }}</li>
+    <li>Size: {{ db_info.size|filesizeformat }}</li>
+</ul>
+<h1>Media Archive</h1>
+<ul>
+    <li>Last build: {{ media_info.date }}</li>
+    <li>Size: {{ media_info.size|filesizeformat }}</li>
+</ul>
+<h1>Data Archive (db + media)</h1>
+<ul>
+    <li>Last build: {{ data_info.date }}</li>
+    <li>Size: {{ data_info.size|filesizeformat }}</li>
+</ul>
+{% endblock %}
