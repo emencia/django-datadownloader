@@ -48,6 +48,14 @@ def create_archive(data_type):
     os.rename(tar_name, path)
 
 
+def delete_archive(data_type):
+    base_path = get_base_path()
+    project_name = settings.BASE_DIR.split("/")[-1]
+    tar_name = "%s_%s.tar.gz" % (project_name, data_type)
+    path = os.path.join(base_path, tar_name)
+    os.remove(path)
+
+
 class JSONResponseMixin(object):
     """
     A mixin that can be used to render a JSON response.
@@ -84,6 +92,16 @@ class DataDownloaderCreateArchiveView(JSONResponseMixin, TemplateView):
         context = super(DataDownloaderCreateArchiveView,
                         self).get_context_data(**kwargs)
         create_archive(context['data_type'])
+        info = get_archives_info()
+        context.update(info)
+        return context
+
+
+class DataDownloaderDeleteArchiveView(JSONResponseMixin, TemplateView):
+    def get_context_data(self, **kwargs):
+        context = super(DataDownloaderDeleteArchiveView,
+                        self).get_context_data(**kwargs)
+        delete_archive(context['data_type'])
         info = get_archives_info()
         context.update(info)
         return context
