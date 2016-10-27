@@ -5,14 +5,29 @@
     <li>Last build: {{ db_info.date }}</li>
     <li>Size: {{ db_info.size|filesizeformat }}</li>
 </ul>
+<div>
+    <a href="{% url 'download_archive' 'db' %}">Download</a>
+    <a href="{% url 'create_archive' 'db' %}">Create or rebuild</a>
+    <a href="{% url 'delete_archive' 'db' %}">Delete</a>
+</div>
 <h1>Media Archive</h1>
 <ul>
     <li>Last build: {{ media_info.date }}</li>
     <li>Size: {{ media_info.size|filesizeformat }}</li>
 </ul>
+<div>
+    <a href="{% url 'download_archive' 'media' %}">Download</a>
+    <a href="{% url 'create_archive' 'media' %}">Create or rebuild</a>
+    <a href="{% url 'delete_archive' 'media' %}">Delete</a>
+</div>
 <h1>Data Archive (db + media)</h1>
 <ul>
     <li>Last build: {{ data_info.date }}</li>
     <li>Size: {{ data_info.size|filesizeformat }}</li>
 </ul>
+<div>
+    <a href="{% url 'download_archive' 'data' %}">Download</a>
+    <a href="{% url 'create_archive' 'data' %}">Create or rebuild</a>
+    <a href="{% url 'delete_archive' 'data' %}">Delete</a>
+</div>
 {% endblock %}

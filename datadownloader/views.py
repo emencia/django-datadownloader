@@ -1,9 +1,11 @@
 import os
 import tarfile
+import subprocess
 from datetime import datetime
-from django.views.generic import TemplateView
-from django.http import JsonResponse
+from sendfile import sendfile
+from django.views.generic import View, TemplateView
 from django.conf import settings
+from django.shortcuts import redirect
 
 
 def get_base_path():
@@ -40,6 +42,13 @@ def create_archive(data_type):
     path = os.path.join(base_path, tar_name)
     if data_type == "db" or data_type == "data":
         folders.append("dumps")
+        dumps_path = os.path.join(settings.BASE_DIR, "dumps")
+        if os.path.exists(dumps_path):
+            for dump_file in os.listdir(dumps_path):
+                os.remove(os.path.join(dumps_path, dump_file))
+        else:
+            os.makedirs(dumps_path)
+        subprocess.check_output('bin/datadump')
     if data_type == "media" or data_type == "data":
         folders.append("project/media")
     with tarfile.open(tar_name, "w:gz") as tar:
@@ -56,27 +65,6 @@ def delete_archive(data_type):
     os.remove(path)
 
 
-class JSONResponseMixin(object):
-    """
-    A mixin that can be used to render a JSON response.
-    """
-    def render_to_response(self, context, **response_kwargs):
-        """
-        Returns a JSON response, transforming 'context' to make the payload.
-        """
-        return JsonResponse(
-            self.serialize_context(context),
-            **response_kwargs
-        )
-
-    def serialize_context(self, context):
-        """
-        Returns an object that will be serialized as JSON by json.dumps().
-        """
-        del context['view']
-        return context
-
-
 class DataDownloaderMainView(TemplateView):
     template_name = "admin/datadownloader/index.html"
 
@@ -87,21 +75,24 @@ class DataDownloaderMainView(TemplateView):
         return context
 
 
-class DataDownloaderCreateArchiveView(JSONResponseMixin, TemplateView):
-    def get_context_data(self, **kwargs):
-        context = super(DataDownloaderCreateArchiveView,
-                        self).get_context_data(**kwargs)
-        create_archive(context['data_type'])
-        info = get_archives_info()
-        context.update(info)
-        return context
+class DataDownloaderCreateArchiveView(View):
+    def get(self, request, *args, **kwargs):
+        create_archive(kwargs['data_type'])
+        return redirect('datadownloader_index')
 
 
-class DataDownloaderDeleteArchiveView(JSONResponseMixin, TemplateView):
-    def get_context_data(self, **kwargs):
-        context = super(DataDownloaderDeleteArchiveView,
-                        self).get_context_data(**kwargs)
-        delete_archive(context['data_type'])
-        info = get_archives_info()
-        context.update(info)
-        return context
+class DataDownloaderDeleteArchiveView(View):
+    def get(self, request, *args, **kwargs):
+        delete_archive(kwargs['data_type'])
+        return redirect('datadownloader_index')
+
+
+class DataDownloaderDownloadArchiveView(View):
+    def get(self, request, *args, **kwargs):
+        data_type = kwargs['data_type']
+        base_path = get_base_path()
+        project_name = settings.BASE_DIR.split("/")[-1]
+        tar_name = "%s_%s.tar.gz" % (project_name, data_type)
+        path = os.path.join(base_path, tar_name)
+        return sendfile(request, path, attachment=True,
+                        attachment_filename=tar_name)
