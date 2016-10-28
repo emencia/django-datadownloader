@@ -48,7 +48,10 @@ def create_archive(data_type):
                 os.remove(os.path.join(dumps_path, dump_file))
         else:
             os.makedirs(dumps_path)
-        subprocess.check_output('bin/datadump')
+        # We will tempory use makefile for run datadump, but we must found
+        # other solution
+        make = ['/usr/bin/make', '-C', settings.BASE_DIR, 'datadump']
+        subprocess.check_output(make)
     if data_type == "media" or data_type == "data":
         folders.append("project/media")
     with tarfile.open(tar_name, "w:gz") as tar:
