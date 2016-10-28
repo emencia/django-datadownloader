@@ -54,10 +54,9 @@ def create_archive(data_type):
         subprocess.check_output(make)
     if data_type == "media" or data_type == "data":
         folders.append("project/media")
-    with tarfile.open(tar_name, "w:gz") as tar:
+    with tarfile.open(path, "w:gz") as tar:
         for folder in folders:
             tar.add(folder)
-    os.rename(tar_name, path)
 
 
 def delete_archive(data_type):
