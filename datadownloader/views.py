@@ -40,6 +40,8 @@ def create_archive(data_type):
     project_name = settings.BASE_DIR.split("/")[-1]
     tar_name = "%s_%s.tar.gz" % (project_name, data_type)
     path = os.path.join(base_path, tar_name)
+    # be sure to be in project root folder
+    os.chdir(settings.BASE_DIR)
     if data_type == "db" or data_type == "data":
         folders.append("dumps")
         dumps_path = os.path.join(settings.BASE_DIR, "dumps")
