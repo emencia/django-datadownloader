@@ -1,7 +1,12 @@
 Changelog
 =========
 
-0.1
----
+0.1.1
+-----
 
-First version
+Use rst syntax for doc/descriptions rather markdown.
+
+0.1.0
+-----
+
+First version.
