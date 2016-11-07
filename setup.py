@@ -10,7 +10,7 @@ setup(
     author_email='lafaye@emencia.com',
     url='http://pypi.python.org/pypi/django-datadownloader',
     license='GNU Affero General Public License v3',
-    packages=find_packages(),
+    packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     classifiers=[
         'Programming Language :: Python',
         'License :: OSI Approved :: GNU Affero General Public License v3',
