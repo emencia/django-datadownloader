@@ -1,7 +1,12 @@
 Changelog
 =========
 
-0.1.2
+0.2.1
+-----
+
+* Forgot to update MANIFEST.in on 0.2.0 release
+
+0.2.0
 -----
 
 * Refactoring code
