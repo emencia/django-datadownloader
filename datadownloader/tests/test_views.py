@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.template.response import TemplateResponse
 from django.test import TestCase, override_settings
+from django.http import HttpResponse
 
 from datadownloader.models import Dump
 
@@ -51,3 +52,19 @@ class TestViews(TestCase):
             mock.call('data'),
             mock.call().destroy(),
         ])
+
+    def test_download_view(self, Dump_):
+        r = self.client.get('/')
+        token = r.context_data['token']
+
+        Dump_.return_value.path = '/srv/123/x.tar.gz'
+        with mock.patch('datadownloader.views.sendfile') as sendfile:
+            sendfile.return_value = HttpResponse()
+            r = self.client.get('/download/data/', data={'token': token}, follow=False)
+
+        sendfile.assert_called_once_with(
+            mock.ANY,
+            '/srv/123/x.tar.gz',
+            attachment=True,
+            attachment_filename=Dump_.return_value.archive_name,
+        )
