@@ -55,14 +55,17 @@ class TestDump(unittest.TestCase):
         with mock.patch.multiple('datadownloader.models', tarfile=tf,
                                  subprocess=sp, shutil=shutil):
             tf.open = mock.MagicMock()
-            dump.create()
+            with mock.patch('os.mkdir'):
+                dump.create()
         binary_call = dump._get_datadump_bin()
         sp.check_output.assert_called_once_with(binary_call)
+        media_path = settings.MEDIA_ROOT.replace("%s/" % os.getcwd(), '')
+        db_path = os.path.join(settings.BASE_DIR,
+                               'dumps').replace("%s/" % os.getcwd(), '')
         tf.assert_has_calls([
             mock.call.open(expected_dump_path, 'w:gz'),
             mock.call.open().__enter__(),
-            mock.call.open().__enter__().add(settings.MEDIA_ROOT),
-            mock.call.open().__enter__().add(os.path.join(settings.BASE_DIR,
-                                                          'dumps')),
+            mock.call.open().__enter__().add(media_path),
+            mock.call.open().__enter__().add(db_path),
             mock.call.open().__exit__(None, None, None),
         ])
