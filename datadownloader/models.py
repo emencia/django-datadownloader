@@ -15,7 +15,8 @@ def get_base_path():
     if hasattr(settings, 'DATA_DOWNLOADER_PATH'):
         base_path = settings.DATA_DOWNLOADER_PATH
     else:
-        base_path = os.path.join(settings.BASE_DIR, 'project/protected_medias/datas')
+        base_path = os.path.join(settings.BASE_DIR,
+                                 'project/protected_medias/datas')
     return base_path
 
 

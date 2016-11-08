@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
-import unittest
-
 from django.template.response import TemplateResponse
 from django.test import TestCase, override_settings
 
@@ -20,7 +16,7 @@ class AuthMiddleware(object):
 
 
 @override_settings(
-    MIDDLEWARE_CLASSES = [
+    MIDDLEWARE_CLASSES=[
         'datadownloader.tests.test_views.AuthMiddleware',
     ],
     ROOT_URLCONF='datadownloader.urls',

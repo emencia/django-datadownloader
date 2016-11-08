@@ -19,12 +19,13 @@ class TestDump(unittest.TestCase):
         self.assertEqual(dump.get_metadata(), {'size': None, 'date': None})
 
     def test_metadata(self):
-        expected_dump_path = os.path.join(settings.DATA_DOWNLOADER_PATH, 'django-datadownloader_db.tar.gz')
+        expected_dump_path = os.path.join(settings.DATA_DOWNLOADER_PATH,
+                                          'django-datadownloader_db.tar.gz')
         dump = Dump('db')
 
         with mock.patch('os.stat') as stat:
             stat.return_value = mock.Mock(
-                st_mtime= 1478598236,
+                st_mtime=1478598236,
                 st_size=12345,
             )
             metadata = dump.get_metadata()
@@ -36,7 +37,8 @@ class TestDump(unittest.TestCase):
         })
 
     def test_destroy(self):
-        expected_dump_path = os.path.join(settings.DATA_DOWNLOADER_PATH, 'django-datadownloader_db.tar.gz')
+        expected_dump_path = os.path.join(settings.DATA_DOWNLOADER_PATH,
+                                          'django-datadownloader_db.tar.gz')
         dump = Dump('db')
 
         with mock.patch('os.remove') as remove:
@@ -45,11 +47,13 @@ class TestDump(unittest.TestCase):
         remove.assert_called_once_with(expected_dump_path)
 
     def test_create(self):
-        expected_dump_path = os.path.join(settings.DATA_DOWNLOADER_PATH, 'django-datadownloader_data.tar.gz')
+        expected_dump_path = os.path.join(settings.DATA_DOWNLOADER_PATH,
+                                          'django-datadownloader_data.tar.gz')
         dump = Dump('data')
 
         tf, sp, shutil = mock.Mock(), mock.Mock(), mock.Mock()
-        with mock.patch.multiple('datadownloader.models', tarfile=tf, subprocess=sp, shutil=shutil):
+        with mock.patch.multiple('datadownloader.models', tarfile=tf,
+                                 subprocess=sp, shutil=shutil):
             tf.open = mock.MagicMock()
             dump.create()
 
@@ -58,6 +62,7 @@ class TestDump(unittest.TestCase):
             mock.call.open(expected_dump_path, 'w:gz'),
             mock.call.open().__enter__(),
             mock.call.open().__enter__().add(settings.MEDIA_ROOT),
-            mock.call.open().__enter__().add(os.path.join(settings.BASE_DIR, 'dumps')),
+            mock.call.open().__enter__().add(os.path.join(settings.BASE_DIR,
+                                                          'dumps')),
             mock.call.open().__exit__(None, None, None),
         ])

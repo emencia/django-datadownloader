@@ -3,7 +3,7 @@
 from sendfile import sendfile
 
 from django.views.generic import View, TemplateView
-from django.core.signing import Signer
+from django.core.signing import Signer, BadSignature
 from django.shortcuts import redirect
 from django.utils.crypto import get_random_string
 from django.http import HttpResponseForbidden
@@ -11,10 +11,9 @@ from django.http import HttpResponseForbidden
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
 
+from datadownloader.models import Dump
 
 signer = Signer(salt='datadownloader')
-
-from datadownloader.models import Dump
 
 
 class MainView(TemplateView):
@@ -29,7 +28,7 @@ class MainView(TemplateView):
                         self).get_context_data(**kwargs)
 
         context['token'] = signer.sign(get_random_string())
-        context['metadata'] = metadata = {}
+        context['metadata'] = {}
         for section in ["db", "media", "data"]:
             dump = Dump(section)
             context['metadata'][section] = dump.get_metadata()
@@ -63,11 +62,11 @@ class DownloadArchiveView(View):
         token = request.GET.get('token')
         try:
             signer.unsign(token)
-        except signing.BadSignature:
+        except BadSignature:
             return HttpResponseForbidden()
 
         dump = Dump(kwargs['data_type'])
         return sendfile(request,
                         dump.path,
                         attachment=True,
-                        attachment_filename=tar_name)
+                        attachment_filename=dump.archive_name)
