@@ -28,3 +28,7 @@ TEMPLATES = [
 INSTALLED_APPS = [
     'datadownloader',
 ]
+
+SENDFILE_BACKEND = 'sendfile.backends.nginx'
+SENDFILE_ROOT = '/srv/www/'
+SENDFILE_URL = '/protected'
