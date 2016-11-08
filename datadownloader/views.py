@@ -17,15 +17,15 @@ signer = Signer(salt='datadownloader')
 from datadownloader.models import Dump
 
 
-class DataDownloaderMainView(TemplateView):
+class MainView(TemplateView):
     template_name = "admin/datadownloader/index.html"
 
     @method_decorator(staff_member_required)
     def dispatch(self, *args, **kw):
-        return super(DataDownloaderMainView, self).dispatch(*args, **kw)
+        return super(MainView, self).dispatch(*args, **kw)
 
     def get_context_data(self, **kwargs):
-        context = super(DataDownloaderMainView,
+        context = super(MainView,
                         self).get_context_data(**kwargs)
 
         context['token'] = signer.sign(get_random_string())
@@ -36,10 +36,10 @@ class DataDownloaderMainView(TemplateView):
         return context
 
 
-class DataDownloaderCreateArchiveView(View):
+class CreateArchiveView(View):
     @method_decorator(staff_member_required)
     def dispatch(self, *args, **kw):
-        return super(DataDownloaderCreateArchiveView, self).dispatch(*args, **kw)
+        return super(CreateArchiveView, self).dispatch(*args, **kw)
 
     def get(self, request, *args, **kwargs):
         dump = Dump(kwargs['data_type'])
@@ -47,10 +47,10 @@ class DataDownloaderCreateArchiveView(View):
         return redirect('datadownloader_index')
 
 
-class DataDownloaderDeleteArchiveView(View):
+class DeleteArchiveView(View):
     @method_decorator(staff_member_required)
     def dispatch(self, *args, **kw):
-        return super(DataDownloaderDeleteArchiveView, self).dispatch(*args, **kw)
+        return super(DeleteArchiveView, self).dispatch(*args, **kw)
 
     def get(self, request, *args, **kwargs):
         dump = Dump(kwargs['data_type'])
@@ -58,7 +58,7 @@ class DataDownloaderDeleteArchiveView(View):
         return redirect('datadownloader_index')
 
 
-class DataDownloaderDownloadArchiveView(View):
+class DownloadArchiveView(View):
     def get(self, request, *args, **kwargs):
         token = request.GET.get('token')
         try:
