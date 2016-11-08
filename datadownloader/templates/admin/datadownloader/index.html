@@ -4,42 +4,42 @@
     <h1>Database Archive</h1>
     <div class="module">
         <ul>
-            <li>Last build: {{ db_info.date }}</li>
-            <li>Size: {{ db_info.size|filesizeformat }}</li>
+            <li>Last build: {{ medata.db.date }}</li>
+            <li>Size: {{ medata.db.size|filesizeformat }}</li>
         </ul>
         <div>
             <a class="changelink" href="{% url 'create_archive' 'db' %}">Create or rebuild</a>
-            {% if db_info.size %}
+            {% if medata.db.size %}
             <a class="changelink" href="{% url 'delete_archive' 'db' %}">Delete</a>
-            <a class="changelink" href="{% url 'download_archive' 'db' %}">Download</a>
+            <a class="changelink" href="{% url 'download_archive' 'db' %}?token={{token}}">Download</a>
             {% endif %}
         </div>
     </div>
     <h1>Media Archive</h1>
     <div class="module">
         <ul>
-            <li>Last build: {{ media_info.date }}</li>
-            <li>Size: {{ media_info.size|filesizeformat }}</li>
+            <li>Last build: {{ medata.media.date }}</li>
+            <li>Size: {{ medata.media.size|filesizeformat }}</li>
         </ul>
         <div>
             <a class="changelink" href="{% url 'create_archive' 'media' %}">Create or rebuild</a>
-            {% if media_info.size %}
+            {% if medata.media.size %}
             <a class="changelink" href="{% url 'delete_archive' 'media' %}">Delete</a>
-            <a class="changelink" href="{% url 'download_archive' 'media' %}">Download</a>
+            <a class="changelink" href="{% url 'download_archive' 'media' %}?token={{token}}">Download</a>
             {% endif %}
         </div>
     </div>
     <h1>Data Archive (db + media)</h1>
     <div class="module">
         <ul>
-            <li>Last build: {{ data_info.date }}</li>
-            <li>Size: {{ data_info.size|filesizeformat }}</li>
+            <li>Last build: {{ medata.data.date }}</li>
+            <li>Size: {{ medata.data.size|filesizeformat }}</li>
         </ul>
         <div>
             <a class="changelink" href="{% url 'create_archive' 'data' %}">Create or rebuild</a>
-            {% if data_info.size %}
+            {% if medata.data.size %}
             <a class="changelink" href="{% url 'delete_archive' 'data' %}">Delete</a>
-            <a class="changelink" href="{% url 'download_archive' 'data' %}">Download</a>
+            <a class="changelink" href="{% url 'download_archive' 'data' %}?token={{token}}">Download</a>
             {% endif %}
         </div>
     </div>

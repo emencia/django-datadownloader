@@ -18,3 +18,14 @@ Links
 
 * Pypi page: https://pypi.python.org/pypi/django-datadownloader
 * Github page: https://github.com/emencia/django-datadownloader
+
+
+Running tests
+=============
+
+To run the tests, run the django test management command with the settings
+found inside datadownloader.tests.settings.
+
+    $ django-admin test --pythonpath=. --settings=datadownloader.tests.settings
+
+You must install mock if you run python2 or python < 3.4.
