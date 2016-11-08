@@ -56,8 +56,8 @@ class TestDump(unittest.TestCase):
                                  subprocess=sp, shutil=shutil):
             tf.open = mock.MagicMock()
             dump.create()
-
-        sp.check_output.assert_called_once_with('datadump')
+        binary_call = dump._get_datadump_bin()
+        sp.check_output.assert_called_once_with(binary_call)
         tf.assert_has_calls([
             mock.call.open(expected_dump_path, 'w:gz'),
             mock.call.open().__enter__(),
