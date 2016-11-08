@@ -27,10 +27,10 @@ def get_archives_info():
         if os.path.exists(path):
             infos = os.stat(path)
             date = datetime.fromtimestamp(int(infos.st_mtime))
-            info["%s_info" % section] = {'date': date,
+            info[section] = {'date': date,
                                          'size': infos.st_size}
         else:
-            info["%s_info" % section] = {'date': None, 'size': None}
+            info[section] = {'date': None, 'size': None}
     return info
 
 
@@ -72,7 +72,7 @@ class DataDownloaderMainView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(DataDownloaderMainView,
                         self).get_context_data(**kwargs)
-        context.update(get_archives_info())
+        context.update(metadata=get_archives_info())
         return context
 
 
