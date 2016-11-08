@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib.admin.views.decorators import staff_member_required
-from .views import DataDownloaderMainView, DataDownloaderCreateArchiveView
-from .views import DataDownloaderDeleteArchiveView
-from .views import DataDownloaderDownloadArchiveView
+
+from .views import (
+    DataDownloaderMainView,
+    DataDownloaderCreateArchiveView,
+    DataDownloaderDeleteArchiveView,
+    DataDownloaderDownloadArchiveView,
+)
 
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^/$', staff_member_required(DataDownloaderMainView.as_view()),
         name="datadownloader_index"),
     url(r'^/create/(?P<data_type>[^/]+)/$',
@@ -19,4 +22,4 @@ urlpatterns = patterns(
     url(r'^/download/(?P<data_type>[^/]+)/$',
         staff_member_required(DataDownloaderDownloadArchiveView.as_view()),
         name="download_archive")
-)
+]
