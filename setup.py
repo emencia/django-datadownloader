@@ -26,6 +26,7 @@ setup(
     install_requires=[
         'Django>=1.7',
         'dr-dump>=0.2.5',
+        'django-sendfile>=0.3.11',
     ],
     include_package_data=True,
     zip_safe=False

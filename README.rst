@@ -13,6 +13,9 @@ For the moment, this app use the script build by the
 package (we must improve it for directly use
 `dr-dump <https://github.com/emencia/dr-dump>`_ package.
 
+Packages can be download with
+`django-sendfile <https://pypi.python.org/pypi/django-sendfile>`_.
+
 Links
 =====
 
