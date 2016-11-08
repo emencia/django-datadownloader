@@ -78,7 +78,9 @@ class Dump(object):
 
     def _clean_dumps_path(self):
         dumps_path = os.path.join(settings.BASE_DIR, 'dumps')
-        shutil.rmtree(dumps_path)
+        if os.path.exists(dumps_path):
+            shutil.rmtree(dumps_path)
+        os.mkdir(dumps_path)
 
     def create(self):
         folders = []
