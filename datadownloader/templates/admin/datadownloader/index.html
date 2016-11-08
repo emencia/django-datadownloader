@@ -11,7 +11,7 @@
             <a class="changelink" href="{% url 'create_archive' 'db' %}">Create or rebuild</a>
             {% if medata.db.size %}
             <a class="changelink" href="{% url 'delete_archive' 'db' %}">Delete</a>
-            <a class="changelink" href="{% url 'download_archive' 'db' %}">Download</a>
+            <a class="changelink" href="{% url 'download_archive' 'db' %}?token={{token}}">Download</a>
             {% endif %}
         </div>
     </div>
@@ -25,7 +25,7 @@
             <a class="changelink" href="{% url 'create_archive' 'media' %}">Create or rebuild</a>
             {% if medata.media.size %}
             <a class="changelink" href="{% url 'delete_archive' 'media' %}">Delete</a>
-            <a class="changelink" href="{% url 'download_archive' 'media' %}">Download</a>
+            <a class="changelink" href="{% url 'download_archive' 'media' %}?token={{token}}">Download</a>
             {% endif %}
         </div>
     </div>
@@ -39,7 +39,7 @@
             <a class="changelink" href="{% url 'create_archive' 'data' %}">Create or rebuild</a>
             {% if medata.data.size %}
             <a class="changelink" href="{% url 'delete_archive' 'data' %}">Delete</a>
-            <a class="changelink" href="{% url 'download_archive' 'data' %}">Download</a>
+            <a class="changelink" href="{% url 'download_archive' 'data' %}?token={{token}}">Download</a>
             {% endif %}
         </div>
     </div>
