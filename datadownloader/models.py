@@ -80,6 +80,8 @@ class Dump(object):
         os.mkdir(dumps_path)
 
     def create(self):
+        # be sure to be in project root folder
+        os.chdir(settings.BASE_DIR)
         folders = []
         if self.data_type == 'db':
             folders.extend(self._dump_db())
