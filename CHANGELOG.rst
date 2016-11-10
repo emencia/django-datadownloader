@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.2.2
+-----
+
+* add some information into main page
+* fix bug in uwsgi execution env
+
 0.2.1
 -----
 
