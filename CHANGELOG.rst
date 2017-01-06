@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.3
+-----
+
+* fix bug with content-type
+
 0.2.2
 -----
 
