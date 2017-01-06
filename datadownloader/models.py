@@ -49,6 +49,10 @@ class Dump(object):
         return "%s_%s.tar.gz" % (self.project_name, self.data_type)
 
     @property
+    def mimetype(self):
+        return "application/x-gzip"
+
+    @property
     def path(self):
         return os.path.join(self.base_path, self.archive_name)
 

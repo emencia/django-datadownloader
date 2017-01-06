@@ -69,4 +69,5 @@ class DownloadArchiveView(View):
         return sendfile(request,
                         dump.path,
                         attachment=True,
-                        attachment_filename=dump.archive_name)
+                        attachment_filename=dump.archive_name,
+                        mimetype=dump.mimetype)
