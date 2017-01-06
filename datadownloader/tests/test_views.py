@@ -60,11 +60,13 @@ class TestViews(TestCase):
         Dump_.return_value.path = '/srv/123/x.tar.gz'
         with mock.patch('datadownloader.views.sendfile') as sendfile:
             sendfile.return_value = HttpResponse()
-            r = self.client.get('/download/data/', data={'token': token}, follow=False)
+            r = self.client.get('/download/data/', data={'token': token},
+                                follow=False)
 
         sendfile.assert_called_once_with(
             mock.ANY,
             '/srv/123/x.tar.gz',
             attachment=True,
             attachment_filename=Dump_.return_value.archive_name,
+            mimetype=Dump_.return_value.mimetype
         )
