@@ -97,7 +97,8 @@ class Dump(object):
 
         with tarfile.open(self.path, "w:gz") as tar:
             for folder in folders:
-                tar.add(folder)
+                archive_name = folder.replace(settings.BASE_DIR, '').lstrip('/')
+                tar.add(folder, archive_name)
 
     def destroy(self):
         os.remove(self.path)
