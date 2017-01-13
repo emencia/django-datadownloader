@@ -69,13 +69,15 @@ class Dump(object):
         return 'datadump'
 
     def _dump_media(self):
-        return [settings.MEDIA_ROOT.replace("%s/" % os.getcwd(), ''), ]
+        return [
+            settings.MEDIA_ROOT,
+        ]
 
     def _dump_db(self):
         self._clean_dumps_path()
         subprocess.check_output(self._get_datadump_bin())
         dump_path = os.path.join(settings.BASE_DIR, 'dumps')
-        return [dump_path.replace("%s/" % os.getcwd(), ''), ]
+        return [dump_path]
 
     def _clean_dumps_path(self):
         dumps_path = os.path.join(settings.BASE_DIR, 'dumps')
@@ -84,8 +86,6 @@ class Dump(object):
         os.mkdir(dumps_path)
 
     def create(self):
-        # be sure to be in project root folder
-        os.chdir(settings.BASE_DIR)
         folders = []
         if self.data_type == 'db':
             folders.extend(self._dump_db())
