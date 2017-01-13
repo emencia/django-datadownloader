@@ -63,7 +63,7 @@ class TestDump(unittest.TestCase):
         tf.assert_has_calls([
             mock.call.open(expected_dump_path, 'w:gz'),
             mock.call.open().__enter__(),
-            mock.call.open().__enter__().add(media_path),
-            mock.call.open().__enter__().add('/abc/'),
+            mock.call.open().__enter__().add(media_path, media_name),
+            mock.call.open().__enter__().add(db_path, db_name),
             mock.call.open().__exit__(None, None, None),
         ])
