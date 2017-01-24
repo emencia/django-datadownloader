@@ -50,14 +50,17 @@ def run_tests(python_version, django) {
         pip("install -r ${workspace}/requirements.d/tests-python2.txt", venv_path);
     }
 
-    sh("${venv_path}/bin/pytest --junitxml=${workspace}/test_results/${test_name}.unit.xml");
+    run('pytest',  "--junitxml=${workspace}/test_results/${test_name}.unit.xml", venv_path);
 }
+def run(prog, command, env=default_env) {
+    sh("${env}/bin/${prog} ${command}");
+};
 
 def pip(command, env=default_env) {
-    sh("${env}/bin/pip ${command}");
+    run('pip', command, env)
 };
 def setuppy(command, env=default_env) {
-    sh("${env}/bin/python setup.py ${command}");
+    run('python', "setup.py ${command}", env)
 }
 
 def venv(requirements, env=default_env, version=3) {
@@ -99,7 +102,7 @@ node {
             stage 'Quality', {
                 gitlabCommitStatus('Quality') {
                     try {
-                        paver("quality --strictness=2 --output=${workspace}/flake8.log");
+                        run('flake8', "--output-file=${workspace}/flake8.log");
                     } finally {
                         step([
                                 $class: 'WarningsPublisher',
