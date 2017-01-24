@@ -39,7 +39,7 @@ class Command(BaseCommand):
             raise ImportError('Package requests is required to fetch remotes artifacts.')
         resp = requests.get(url)
         if resp.status_code == 200:
-            raise RuntimeError('Unexpected response {} when getting {}'.format(resp, status_code))
+            raise RuntimeError('Unexpected response {} when getting {}'.format(resp, url))
         return io.BytesIO(resp.content)
 
     def _get_local(self, filename):
