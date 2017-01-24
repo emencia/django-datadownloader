@@ -50,7 +50,9 @@ def run_tests(python_version, django) {
         pip('install', "-r ${workspace}/requirements.d/tests-python2.txt", venv_path);
     }
 
-    run('pytest',  "--junitxml=${workspace}/test_results/${test_name}.unit.xml", venv_path);
+    withEnv(["PYTHONPATH=${workspace}"]) {
+        run('pytest',  "--junitxml=${workspace}/test_results/${test_name}.unit.xml", venv_path);
+    }
 }
 def run(prog, command, env=default_env) {
     sh("${env}/bin/${prog} ${command}");
