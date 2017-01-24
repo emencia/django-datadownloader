@@ -90,6 +90,7 @@ notify "Building in ${env.BUILD_URL}"
 node {
     workspace = pwd();
     sh('env');
+    sh('git log -n 10 --oneline --graph')
     default_env = "${workspace}/envs/default";
 
     withEnv(['LC_ALL=en_US.utf-8']) {
@@ -146,6 +147,7 @@ node {
             notify("Seems pretty good ${env.BUILD_URL}");
         }
 
+        echo "${env.gitlabSourceBranch} == ${DEPLOYED_BRANCH}"
         if (env.gitlabSourceBranch == DEPLOYED_BRANCH && env.gitlabActionType == 'PUSH' || env.gitlabSourceBranch == null) {
             gitlabBuilds(builds: [
                     'Publish',
