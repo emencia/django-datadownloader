@@ -89,6 +89,7 @@ def notify(text) {
 notify "Building in ${env.BUILD_URL}"
 node {
     workspace = pwd();
+    sh('env');
     default_env = "${workspace}/envs/default";
 
     withEnv(['LC_ALL=en_US.utf-8']) {
