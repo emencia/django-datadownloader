@@ -12,7 +12,7 @@ def get_code() {
     if (env.gitlabSourceBranch == null) {
         checkout([
             $class: 'GitSCM',
-            branches: [[name: "origin/${DEFAULT_BRANCH}"]],
+            branches: [[name: "remotes/origin/${DEFAULT_BRANCH}"]],
         ])
     } else if (is_merge_request) {
         echo "Pre Build Merge ${env.gitlabTargetBranch} and ${env.gitlabSourceBranch}"
