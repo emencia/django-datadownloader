@@ -62,7 +62,6 @@ class Dump(object):
     def _dump_media(self):
         return [settings.MEDIA_ROOT.replace("%s/" % os.getcwd(), ''), ]
 
-
     def _clean_dumps_path(self):
         dumps_path = os.path.join(settings.BASE_DIR, 'dumps')
         if os.path.exists(dumps_path):
@@ -106,7 +105,7 @@ class OldDrDump(object):
 
     def __call__(self):
         self._clean_dumps_path()
-        subprocess.check_output(bin_path)
+        subprocess.check_output(self.bin_path)
         dump_path = os.path.join(settings.BASE_DIR, 'dumps')
         return [
             dump_path.replace("%s/" % os.getcwd(), ''),
