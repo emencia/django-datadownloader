@@ -49,23 +49,21 @@ class TestDump(unittest.TestCase):
     def test_create(self):
         expected_dump_path = os.path.join(settings.DATA_DOWNLOADER_PATH,
                                           'django-datadownloader_data.tar.gz')
-        dump = Dump('data')
+        db_dumper = mock.Mock(return_value=['/abc/'])
+        dump = Dump('data', database_dumper=db_dumper)
 
-        tf, sp, shutil = mock.Mock(), mock.Mock(), mock.Mock()
-        with mock.patch.multiple('datadownloader.models', tarfile=tf,
-                                 subprocess=sp, shutil=shutil):
+        tf, shutil = mock.Mock(), mock.Mock()
+        with mock.patch.multiple('datadownloader.models', tarfile=tf, shutil=shutil):
             tf.open = mock.MagicMock()
             with mock.patch('os.mkdir'):
                 dump.create()
-        binary_call = dump._get_datadump_bin()
-        sp.check_output.assert_called_once_with(binary_call)
+
+        db_dumper.assert_called_once_with()
         media_path = settings.MEDIA_ROOT.replace("%s/" % os.getcwd(), '')
-        db_path = os.path.join(settings.BASE_DIR,
-                               'dumps').replace("%s/" % os.getcwd(), '')
         tf.assert_has_calls([
             mock.call.open(expected_dump_path, 'w:gz'),
             mock.call.open().__enter__(),
             mock.call.open().__enter__().add(media_path),
-            mock.call.open().__enter__().add(db_path),
+            mock.call.open().__enter__().add('/abc/'),
             mock.call.open().__exit__(None, None, None),
         ])
