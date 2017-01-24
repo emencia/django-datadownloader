@@ -57,6 +57,9 @@ def run(prog, command, env=default_env) {
 };
 
 def pip(command, env=default_env) {
+    if (index_url) {
+        command = "-i ${index_url} ${command}";
+    }
     run('pip', command, env)
 };
 def setuppy(command, env=default_env) {
@@ -68,7 +71,7 @@ def venv(requirements, env=default_env, version=3) {
         sh("virtualenv --python python${version} ${env}");
     }
     if (requirements) {
-        pip("install -i ${index_url} ${requirements}", env);
+        pip("install ${requirements}", env);
     }
     return env;
 }
