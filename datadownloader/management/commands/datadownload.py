@@ -38,7 +38,7 @@ class Command(BaseCommand):
         except ImportError:
             raise ImportError('Package requests is required to fetch remotes artifacts.')
         resp = requests.get(url)
-        if resp.status_code == 200:
+        if resp.status_code != 200:
             raise RuntimeError('Unexpected response {} when getting {}'.format(resp, url))
         return io.BytesIO(resp.content)
 
@@ -47,13 +47,15 @@ class Command(BaseCommand):
 
     def handle(self, url, **options):
         try:
+            content = None
             if '://' in url and not url.startswith('file://'):
                 content = self._get_remote(url)
             else:
                 content = self._get_local(url)
             self._handle_archive(tarfile.open(fileobj=content, mode='r'), options['components'] or 'db+media')
         finally:
-            content.close()
+            if content:
+                content.close()
 
     def _handle_archive(self, archive, components):
         components = set(components.split('+'))
