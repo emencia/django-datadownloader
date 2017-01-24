@@ -45,9 +45,9 @@ def run_tests(python_version, django) {
     def venv_path = "${workspace}/envs/${test_name}";
 
     venv("-r ${workspace}/requirements.d/tests.txt",  venv_path, python_version);
-    pip("install 'django>=${django_major}.${django_minor},<${django_major}.${django_minor_next}'", venv_path);
+    pip('install', "'django>=${django_major}.${django_minor},<${django_major}.${django_minor_next}'", venv_path);
     if (python_version == '2') {
-        pip("install -r ${workspace}/requirements.d/tests-python2.txt", venv_path);
+        pip('install', "-r ${workspace}/requirements.d/tests-python2.txt", venv_path);
     }
 
     run('pytest',  "--junitxml=${workspace}/test_results/${test_name}.unit.xml", venv_path);
@@ -56,10 +56,11 @@ def run(prog, command, env=default_env) {
     sh("${env}/bin/${prog} ${command}");
 };
 
-def pip(command, env=default_env) {
-    if (index_url) {
+def pip(prog, command, env=default_env) {
+    if (prog == 'install' && index_url) {
         command = "-i ${index_url} ${command}";
     }
+    command = "${prog} ${command}";
     run('pip', command, env)
 };
 def setuppy(command, env=default_env) {
@@ -71,7 +72,7 @@ def venv(requirements, env=default_env, version=3) {
         sh("virtualenv --python python${version} ${env}");
     }
     if (requirements) {
-        pip("install ${requirements}", env);
+        pip('install', requirements, env);
     }
     return env;
 }
