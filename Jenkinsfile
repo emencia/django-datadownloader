@@ -1,6 +1,6 @@
 #!groovy
 
-DEFAULT_BRANCH = 'drdump_1.O'
+DEFAULT_BRANCH = 'drdump_1.0'
 DEPLOYED_BRANCH = DEFAULT_BRANCH
 
 is_merge_request = env.gitlabTargetBranch != env.gitlabSourceBranch;
