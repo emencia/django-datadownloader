@@ -146,10 +146,10 @@ node {
             notify("Seems pretty good ${env.BUILD_URL}");
         }
 
-        gitlabBuilds(builds: [
-                'Publish',
-        ]) {
-            if (env.gitlabSourceBranch == DEPLOYED_BRANCH && env.gitlabActionType == 'PUSH' || env.gitlabSourceBranch == null) {
+        if (env.gitlabSourceBranch == DEPLOYED_BRANCH && env.gitlabActionType == 'PUSH' || env.gitlabSourceBranch == null) {
+            gitlabBuilds(builds: [
+                    'Publish',
+            ]) {
                 stage 'Publish', {
                     gitlabCommitStatus('Publish') {
                         setuppy("register -r ${index}");
