@@ -17,8 +17,7 @@ def get_base_path():
     if hasattr(settings, 'DATA_DOWNLOADER_PATH'):
         base_path = settings.DATA_DOWNLOADER_PATH
     else:
-        base_path = os.path.join(settings.BASE_DIR,
-                                 'project/protected_medias/datas')
+        base_path = os.path.abspath(os.path.join(settings.BASE_DIR, 'project/protected_medias/datas'))
     return base_path
 
 
@@ -68,6 +67,12 @@ class Dump(object):
             shutil.rmtree(dumps_path)
         os.mkdir(dumps_path)
 
+    def _ensure_base_path(self):
+        try:
+            os.makedirs(self.base_path)
+        except OSError:
+            pass
+
     def create(self):
         folders = []
         if self.data_type == 'db':
@@ -78,6 +83,7 @@ class Dump(object):
             folders.extend(self._dump_media())
             folders.extend(self.database_dumper())
 
+        self._ensure_base_path()
         with tarfile.open(self.path, "w:gz") as tar:
             for folder in folders:
                 tar.add(folder)
