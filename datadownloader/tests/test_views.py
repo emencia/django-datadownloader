@@ -10,10 +10,11 @@ try:
 except ImportError:
     from unittest import mock
 
+user_mock = mock.Mock()
 
 class AuthMiddleware(object):
     def process_request(self, req):
-        req.user = mock.Mock()
+        req.user = user_mock
 
 
 @override_settings(
@@ -46,6 +47,20 @@ class TestViews(TestCase):
 #            mock.call('data'),
 #            mock.call().create(),
 #        ])
+
+    @mock.patch('datadownloader.views.signer')
+    def test_create_view_token(self, Dump_, signer):
+        r = self.client.get('/create/data/', data={'token': 'token'}, follow=False)
+        assert r.status_code == 302
+
+    def test_create_view_no_auth(self, Dump_):
+        @self.addCleanup
+        def rest_is_authenticated():
+            user_mock.is_authenticated = True
+
+        user_mock.is_authenticated = False
+        r = self.client.get('/create/data/', data={'token': 'badtoken'}, follow=False)
+        assert r.status_code == 403, r
 
     def test_destroy_view(self, Dump_):
         r = self.client.get('/delete/data/', follow=False)
