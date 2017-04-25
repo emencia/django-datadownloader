@@ -137,7 +137,7 @@ node {
                     } finally {
                         step([
                                 $class: 'JUnitResultArchiver',
-                                testResults: "test_results/*.xml",
+                                testResults: "*.tests.xml",
                         ]);
                     }
                 }
