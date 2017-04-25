@@ -59,11 +59,10 @@ class TestDump(unittest.TestCase):
                 dump.create()
 
         db_dumper.assert_called_once_with()
-        media_path = settings.MEDIA_ROOT.replace("%s/" % os.getcwd(), '')
         tf.assert_has_calls([
             mock.call.open(expected_dump_path, 'w:gz'),
             mock.call.open().__enter__(),
-            mock.call.open().__enter__().add(media_path, media_name),
-            mock.call.open().__enter__().add(db_path, db_name),
+            mock.call.open().__enter__().add(settings.MEDIA_ROOT, 'medias'),
+            mock.call.open().__enter__().add('/abc/', 'abc/'),
             mock.call.open().__exit__(None, None, None),
         ])
