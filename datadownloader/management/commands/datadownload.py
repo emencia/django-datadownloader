@@ -9,7 +9,14 @@ import os.path
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.conf import settings
+from django.core import signing
+from django.utils.crypto import get_random_string
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
 
+signer = signing.Signer(salt='datadownloader')
 
 class Command(BaseCommand):
 
@@ -32,7 +39,7 @@ class Command(BaseCommand):
             'url'
         )
 
-    def _get_remote(self, url):
+    def _get_url(self, url):
         try:
             import requests
         except ImportError:
@@ -40,6 +47,19 @@ class Command(BaseCommand):
         resp = requests.get(url)
         if resp.status_code != 200:
             raise RuntimeError('Unexpected response {} when getting {}'.format(resp, url))
+        return resp
+
+    def _get_remote(self, url):
+        if "?token" not in url:
+            archive_path = reverse('download_archive',
+                                   kwargs={'data_type': 'data'})
+            create_path = reverse('create_archive',
+                                  kwargs={'data_type': 'data'})
+            token = signer.sign(get_random_string())
+            create_url = "%s%s?token=%s" % (url, create_path, token)
+            resp = self._get_url(create_url)
+            url = "%s%s?token=%s" % (url, archive_path, token)
+        resp = self._get_url(url)
         return io.BytesIO(resp.content)
 
     def _get_local(self, filename):
