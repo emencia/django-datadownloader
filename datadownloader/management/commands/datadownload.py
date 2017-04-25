@@ -49,12 +49,20 @@ class Command(BaseCommand):
             raise RuntimeError('Unexpected response {} when getting {}'.format(resp, url))
         return resp
 
-    def _get_remote(self, url):
+    def _get_remote(self, url, components):
         if "?token" not in url:
+            components = set(components.split('+'))
+            content = None
+            if 'db' in components and 'media' in components:
+                content = 'data'
+            elif 'db' in components:
+                content = 'db'
+            elif 'media' in components:
+                content = 'media'
             archive_path = reverse('download_archive',
-                                   kwargs={'data_type': 'data'})
+                                   kwargs={'data_type': content})
             create_path = reverse('create_archive',
-                                  kwargs={'data_type': 'data'})
+                                  kwargs={'data_type': content})
             token = signer.sign(get_random_string())
             create_url = "%s%s?token=%s" % (url, create_path, token)
             resp = self._get_url(create_url)
@@ -69,10 +77,12 @@ class Command(BaseCommand):
         try:
             content = None
             if '://' in url and not url.startswith('file://'):
-                content = self._get_remote(url)
+                content = self._get_remote(url,
+                                           options['components'] or 'db+media')
             else:
                 content = self._get_local(url)
-            self._handle_archive(tarfile.open(fileobj=content, mode='r'), options['components'] or 'db+media')
+            self._handle_archive(tarfile.open(fileobj=content, mode='r'),
+                                 options['components'] or 'db+media')
         finally:
             if content:
                 content.close()
