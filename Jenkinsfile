@@ -108,7 +108,7 @@ node {
             stage 'Quality', {
                 gitlabCommitStatus('Quality') {
                     try {
-                        run('flake8');
+                        run('flake8', "--output-file=${workspace}/flake8.log");
                     } finally {
                         step([
                                 $class: 'WarningsPublisher',
