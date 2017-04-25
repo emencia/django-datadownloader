@@ -42,17 +42,14 @@ def run_tests(python_version, django) {
     def django_minor_next = django_minor + 1;
 
     def test_name = "python${python_version}-django${django_major}.${django_minor}";
-    def venv_path = "${workspace}/envs/${test_name}";
+    def venv_path = "${workspace}/.envs/${test_name}";
 
     venv("-r ${workspace}/requirements.txt -r ${workspace}/requirements.d/tests.txt",  venv_path, python_version);
     pip('install', "'django>=${django_major}.${django_minor},<${django_major}.${django_minor_next}'", venv_path);
     if (python_version == '2') {
         pip('install', "-r ${workspace}/requirements.d/tests-python2.txt", venv_path);
     }
-
-    withEnv(["PYTHONPATH=${workspace}"]) {
-        run('pytest',  "--junitxml=${workspace}/test_results/${test_name}.unit.xml", venv_path);
-    }
+    run('pytest',  "--junitxml=${workspace}/${test_name}.tests.xml", venv_path);
 }
 def run(prog, command, env=default_env) {
     sh("${env}/bin/${prog} ${command}");
@@ -89,7 +86,7 @@ def notify(text) {
 notify "Building in ${env.BUILD_URL}"
 node {
     workspace = pwd();
-    default_env = "${workspace}/envs/default";
+    default_env = "${workspace}/.envs/default";
 
     withEnv(['LC_ALL=en_US.utf-8']) {
         stage 'Checkout', {
@@ -107,6 +104,7 @@ node {
             }
             stage 'Quality', {
                 gitlabCommitStatus('Quality') {
+                    writeFile(file: './flake8.log', text: '');
                     try {
                         run('flake8', "--output-file=${workspace}/flake8.log");
                     } finally {
@@ -117,7 +115,7 @@ node {
                                 unHealthy: '100',
                                 parserConfigurations: [[
                                 parserName: 'Pep8',
-                                pattern: "${workspace}/flake8.log"
+                                pattern: "flake8.log"
                                 ]]
                         ]);
                     }
