@@ -53,7 +53,8 @@ class TestDump(unittest.TestCase):
         dump = Dump('data', database_dumper=db_dumper)
 
         tf, shutil = mock.Mock(), mock.Mock()
-        with mock.patch.multiple('datadownloader.models', tarfile=tf, shutil=shutil):
+        with mock.patch.multiple('datadownloader.models', tarfile=tf,
+                                 shutil=shutil):
             tf.open = mock.MagicMock()
             with mock.patch('os.mkdir'):
                 dump.create()
@@ -63,7 +64,7 @@ class TestDump(unittest.TestCase):
         tf.assert_has_calls([
             mock.call.open(expected_dump_path, 'w:gz'),
             mock.call.open().__enter__(),
-            mock.call.open().__enter__().add(media_path, media_name),
-            mock.call.open().__enter__().add(db_path, db_name),
+            mock.call.open().__enter__().add(media_path, media_name),  # noqa: F821
+            mock.call.open().__enter__().add(db_path, db_name),  # noqa: F821
             mock.call.open().__exit__(None, None, None),
         ])
