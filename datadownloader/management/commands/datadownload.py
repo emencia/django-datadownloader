@@ -18,7 +18,6 @@ except ImportError:
 
 signer = signing.Signer(salt='datadownloader')
 
-
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
