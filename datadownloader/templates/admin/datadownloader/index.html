@@ -8,7 +8,7 @@
             <li>Size: {{ metadata.db.size|filesizeformat }}</li>
         </ul>
         <div>
-            <a class="changelink" href="{% url 'create_archive' 'db' %}">Create or rebuild</a>
+            <a class="changelink" href="{% url 'create_archive' 'db' %}?token={{token}}">Create or rebuild</a>
             {% if metadata.db.size %}
             <a class="changelink" href="{% url 'delete_archive' 'db' %}">Delete</a>
             <a class="changelink" href="{% url 'download_archive' 'db' %}?token={{token}}">Download</a>
@@ -22,7 +22,7 @@
             <li>Size: {{ metadata.media.size|filesizeformat }}</li>
         </ul>
         <div>
-            <a class="changelink" href="{% url 'create_archive' 'media' %}">Create or rebuild</a>
+            <a class="changelink" href="{% url 'create_archive' 'media' %}?token={{token}}">Create or rebuild</a>
             {% if metadata.media.size %}
             <a class="changelink" href="{% url 'delete_archive' 'media' %}">Delete</a>
             <a class="changelink" href="{% url 'download_archive' 'media' %}?token={{token}}">Download</a>
@@ -36,7 +36,7 @@
             <li>Size: {{ metadata.data.size|filesizeformat }}</li>
         </ul>
         <div>
-            <a class="changelink" href="{% url 'create_archive' 'data' %}">Create or rebuild</a>
+            <a class="changelink" href="{% url 'create_archive' 'data' %}?token={{token}}">Create or rebuild</a>
             {% if metadata.data.size %}
             <a class="changelink" href="{% url 'delete_archive' 'data' %}">Delete</a>
             <a class="changelink" href="{% url 'download_archive' 'data' %}?token={{token}}">Download</a>

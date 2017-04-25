@@ -36,11 +36,12 @@ class MainView(TemplateView):
 
 
 class CreateArchiveView(View):
-    @method_decorator(staff_member_required)
-    def dispatch(self, *args, **kw):
-        return super(CreateArchiveView, self).dispatch(*args, **kw)
-
     def get(self, request, *args, **kwargs):
+        token = request.GET.get('token')
+        try:
+            signer.unsign(token)
+        except signing.BadSignature:
+            return HttpResponseForbidden()
         dump = Dump(kwargs['data_type'])
         dump.create()
         return redirect('datadownloader_index')
