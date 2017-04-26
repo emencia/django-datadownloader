@@ -11,6 +11,7 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.core import signing
 from django.utils.crypto import get_random_string
+from django.utils.six.moves.urllib_parse import parse_qs, urlparse, urlunparse
 try:
     from django.urls import reverse
 except ImportError:
@@ -18,7 +19,11 @@ except ImportError:
 
 signer = signing.Signer(salt='datadownloader')
 
+
 class Command(BaseCommand):
+    def __init__(self, *args, **kw):
+        self._requests = kw.pop('requests', None)
+        super(Command, self).__init__(*args, **kw)
 
     def add_arguments(self, parser):
         super(Command, self).add_arguments(parser)
@@ -39,50 +44,52 @@ class Command(BaseCommand):
             'url'
         )
 
-    def _get_url(self, url):
+    @property
+    def requests(self):
+        if self._requests:
+            return self._requests
         try:
-            import requests
+            self._requests = __import__('requests')
         except ImportError:
             raise ImportError('Package requests is required to fetch remotes artifacts.')
-        resp = requests.get(url)
+        return self._requests
+
+    def _get_url(self, url, params=None):
+        resp = self.requests.get(url)
         if resp.status_code != 200:
             raise RuntimeError('Unexpected response {} when getting {}'.format(resp, url))
         return resp
 
     def _get_remote(self, url, components):
-        if "?token" not in url:
-            components = set(components.split('+'))
-            content = None
-            if 'db' in components and 'media' in components:
-                content = 'data'
-            elif 'db' in components:
-                content = 'db'
-            elif 'media' in components:
-                content = 'media'
-            archive_path = reverse('download_archive',
-                                   kwargs={'data_type': content})
-            create_path = reverse('create_archive',
-                                  kwargs={'data_type': content})
+        parsed_url = urlparse(url)
+        if 'token' not in parse_qs(parsed_url.query):
+            components = set(components.split('+')) & {'db', 'media'}
+            content = 'data' if components == {'db', 'media'} else components.pop()
+
+            create_path = reverse('create_archive', kwargs={'data_type': content})
             token = signer.sign(get_random_string())
-            create_url = "%s%s?token=%s" % (url, create_path, token)
+            query = 'token={}{}'.format(token, '&' + parsed_url.query if parsed_url.query else '')
+            create_url = urlunparse([parsed_url.scheme, parsed_url.netloc, create_path, '', query, ''])
             resp = self._get_url(create_url)
-            url = "%s%s?token=%s" % (url, archive_path, token)
-        resp = self._get_url(url)
+
+            archive_path = reverse('download_archive', kwargs={'data_type': content})
+            url = urlunparse([parsed_url.scheme, parsed_url.netloc, archive_path, '', query, ''])
+
+        resp = self._get_url(url, params={'token': ''})
         return io.BytesIO(resp.content)
 
     def _get_local(self, filename):
         return open(filename, 'rb')
 
     def handle(self, url, **options):
+        components = options.get('components') or 'db+media'
         try:
             content = None
             if '://' in url and not url.startswith('file://'):
-                content = self._get_remote(url,
-                                           options['components'] or 'db+media')
+                content = self._get_remote(url, components)
             else:
                 content = self._get_local(url)
-            self._handle_archive(tarfile.open(fileobj=content, mode='r'),
-                                 options['components'] or 'db+media')
+            self._handle_archive(tarfile.open(fileobj=content, mode='r'), components)
         finally:
             if content:
                 content.close()

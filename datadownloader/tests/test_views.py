@@ -12,6 +12,7 @@ except ImportError:
 
 user_mock = mock.Mock()
 
+
 class AuthMiddleware(object):
     def process_request(self, req):
         req.user = user_mock

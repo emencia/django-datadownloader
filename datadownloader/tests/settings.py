@@ -28,6 +28,7 @@ TEMPLATES = [
 INSTALLED_APPS = [
     'datadownloader',
 ]
+ROOT_URLCONF = 'datadownloader.urls'
 
 SENDFILE_BACKEND = 'sendfile.backends.nginx'
 SENDFILE_ROOT = '/srv/www/'
