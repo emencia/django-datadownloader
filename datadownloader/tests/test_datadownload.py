@@ -9,7 +9,6 @@ try:
 except ImportError:
     import mock
 
-from django.utils import crypto
 from datadownloader.management.commands.datadownload import Command
 
 
@@ -60,7 +59,8 @@ def test_datadownload(mock_requests, cmd, temp_media):
 @pytest.mark.usefixtures('media_root')
 def test_datadownload_create(mock_requests, cmd, temp_media):
     with mock.patch('datadownloader.management.commands.datadownload.call_command'):
-        with mock.patch('datadownloader.management.commands.datadownload.get_random_string', return_value='yUTPPBSuUcbG'):
+        with mock.patch('datadownloader.management.commands.datadownload.get_random_string',
+                        return_value='yUTPPBSuUcbG'):
             cmd.handle('https://example.org/')
 
     assert mock_requests.get.mock_calls == [
