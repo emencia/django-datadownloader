@@ -16,6 +16,59 @@ package (we must improve it for directly use
 Packages can be download with
 `django-sendfile <https://pypi.python.org/pypi/django-sendfile>`_.
 
+Install
+=======
+
+You can retrieve it via pip:
+
+``pip install django-datadownloader``
+
+You can add this to your requirements file:
+
+```
+django-datadownloader==1.0.0b5
+dr-dump==1.0.0b7
+
+```
+
+Usage
+=====
+
+You need to add two libraries in your ``INSTALLED_APPS``:
+
+```python
+INSTALLED_APPS = (
+    ...
+    'drdump',
+    'datadownloader',
+    ...
+)
+```
+
+Add this to your URLs:
+
+```python
+urlpatterns = [
+    ...
+    url(r'^admin/datadownloader/', include('datadownloader.urls')),
+    ...
+]
+
+```
+
+You can add a few options:
+
+```python
+
+DATA_DOWNLOADER_PATH = join(VAR_PATH, 'protected_medias/datas')
+DRDUMP_OTHER_APPS = True
+DRDUMP_MAP_FILE = join(BASE_DIR, 'drdump.json')
+DRDUMP_EXCLUDE_APPS = ['auth', 'sessions', 'contenttypes']
+
+```
+
+See DrDump documentation for more: https://github.com/emencia/dr-dump
+
 Links
 =====
 
