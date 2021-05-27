@@ -2,7 +2,5 @@ include MANIFEST.in
 include LICENSE.txt
 include README.rst
 include CHANGELOG.rst
+include requirements.txt
 recursive-include datadownloader/templates *
-recursive-include datadownloader/locale *
-include datadownloader/tests/django-datadownloader_db.tar.gz
-recursive-include datadownloader/tests/templates *

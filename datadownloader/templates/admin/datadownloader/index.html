@@ -46,7 +46,15 @@
     <h1>Information</h1>
     <div class="module">
         <div>
-            For inject json data into your database you must use the <strong>loaddata</strong> command from django. If you use a django project build with <a href="https://cookiecutter-djangocms3-buildout.readthedocs.io/en/latest/">cookiecutter-djangocms3-buildout</a> you can use the shortcut: <pre>make reset_sqlite</pre>
+            To inject json data into your database you must use the <strong>loaddata</strong> command from django.
+            If you use a django project build with <a href="https://cookiecutter-djangocms3-buildout.readthedocs.io/en/latest/">cookiecutter-djangocms3-buildout</a>
+            you can use the shortcut: <pre>make reset_sqlite</pre>
+        </div>
+        <div>
+            You may install media and database by using this command
+            <pre>
+bin/django-instance datadownload {{request.scheme}}://{{request.get_host}}{% url 'download_archive' 'data' %}?token={{token}}
+            </pre>
         </div>
     </div>
 </div>

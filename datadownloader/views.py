@@ -6,7 +6,7 @@ from django.views.generic import View, TemplateView
 from django.core import signing
 from django.shortcuts import redirect
 from django.utils.crypto import get_random_string
-from django.http import HttpResponseForbidden
+from django.core.exceptions import PermissionDenied
 
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
@@ -35,11 +35,22 @@ class MainView(TemplateView):
         return context
 
 
-class CreateArchiveView(View):
-    @method_decorator(staff_member_required)
+class PermissionCheckerMixin(object):
     def dispatch(self, *args, **kw):
-        return super(CreateArchiveView, self).dispatch(*args, **kw)
+        self.check_permission()
+        return super(PermissionCheckerMixin, self).dispatch(*args, **kw)
 
+    def check_permission(self):
+        if self.request.user.is_authenticated and self.request.user.is_staff:
+            return
+        token = self.request.GET.get('token')
+        try:
+            signer.unsign(token)
+        except signing.BadSignature:
+            raise PermissionDenied()
+
+
+class CreateArchiveView(PermissionCheckerMixin, View):
     def get(self, request, *args, **kwargs):
         dump = Dump(kwargs['data_type'])
         dump.create()
@@ -57,14 +68,8 @@ class DeleteArchiveView(View):
         return redirect('datadownloader_index')
 
 
-class DownloadArchiveView(View):
+class DownloadArchiveView(PermissionCheckerMixin, View):
     def get(self, request, *args, **kwargs):
-        token = request.GET.get('token')
-        try:
-            signer.unsign(token)
-        except signing.BadSignature:
-            return HttpResponseForbidden()
-
         dump = Dump(kwargs['data_type'])
         return sendfile(request,
                         dump.path,

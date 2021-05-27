@@ -1,0 +1,5 @@
+-r ../requirements.txt
+-r tests.txt
+flake8
+setuptools>=34
+wheel
