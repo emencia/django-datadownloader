@@ -31,6 +31,7 @@ setup(
     description=__import__('datadownloader').__doc__,
     long_description=u"\n".join((open('README.rst').read(),
                                 open('CHANGELOG.rst').read())),
+    long_description_content_type="text/x-rst",
     author='Philippe Lafaye',
     author_email='lafaye@emencia.com',
     url='http://pypi.python.org/pypi/django-datadownloader',
