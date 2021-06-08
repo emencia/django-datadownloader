@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
-
 import shutil
 import tempfile
 import tarfile
 import io
 import os.path
 
+from six.moves.urllib_parse import parse_qs, urlparse, urlunparse
+
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.core import signing
 from django.utils.crypto import get_random_string
-from django.utils.six.moves.urllib_parse import parse_qs, urlparse, urlunparse
+
 try:
     from django.urls import reverse
 except ImportError:

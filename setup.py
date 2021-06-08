@@ -3,28 +3,6 @@
 from setuptools import setup, find_packages
 
 
-def parse_requirements(requirements_txt):
-    requirements = []
-    try:
-        with open(requirements_txt, 'r') as f:
-            for line in f:
-                line = line.strip()
-                if line.startswith('#') or not line:
-                    continue
-                if '://' in line:
-                    continue
-                if line.startswith('-'):
-                    raise ValueError('Unexpected command {0} in {1}'.format(
-                        line,
-                        requirements_txt,
-                    ))
-
-                requirements.append(line)
-        return requirements
-    except IOError:
-        return []
-
-
 setup(
     name='django-datadownloader',
     version=__import__('datadownloader').__version__,
@@ -46,13 +24,27 @@ setup(
         'Operating System :: OS Independent',
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
         'Framework :: Django',
-        "Framework :: Django :: 1.7",
+        'Framework :: Django :: 1.7',
+        'Framework :: Django :: 1.8',
+        'Framework :: Django :: 1.9',
+        'Framework :: Django :: 2.0',
+        'Framework :: Django :: 2.1',
+        'Framework :: Django :: 2.2',
+        'Framework :: Django :: 3.0',
+        'Framework :: Django :: 3.1',
         'Intended Audience :: Developers',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    install_requires=parse_requirements('requirements.txt'),
+    install_requires=[
+        "six",
+        "django>=1.8",
+        "dr-dump>=1.1.0",
+        "django-sendfile>=0.3.11",
+    ],
     include_package_data=True,
     zip_safe=False
 )
