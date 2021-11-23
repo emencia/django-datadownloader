@@ -41,6 +41,7 @@ Add this to your URLs: ::
 You can add a few options: ::
 
     DATA_DOWNLOADER_PATH = join(VAR_PATH, 'protected_medias/datas')
+    DATA_DOWNLOADER_DUMP_PATH = join(VAR_PATH, 'dumps')
     DRDUMP_OTHER_APPS = True
     DRDUMP_MAP_FILE = join(BASE_DIR, 'drdump.json')
     DRDUMP_EXCLUDE_APPS = ['auth', 'sessions', 'contenttypes']

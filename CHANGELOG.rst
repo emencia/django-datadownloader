@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.2.0 - 2021/11/23
+------------------
+
+Add settings DATA_DOWNLOADER_DUMP_PATH for specify folder where drdump dumps
+are stored
+
 1.1.0 - 2021/06/08
 ------------------
 

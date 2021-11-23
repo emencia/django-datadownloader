@@ -42,7 +42,7 @@ setup(
     install_requires=[
         "six",
         "django>=1.8",
-        "dr-dump>=1.1.0",
+        "dr-dump>=1.1.5",
         "django-sendfile>=0.3.11",
     ],
     include_package_data=True,
