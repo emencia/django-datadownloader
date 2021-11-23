@@ -123,8 +123,8 @@ class OldDrDump(object):
 
 class DrDump(object):
     def __call__(self):
-        call_command('dr_dump')
-        dump_path = os.path.join(settings.BASE_DIR, 'dumps')
+        dump_path = getattr(settings, 'DATA_DOWNLOADER_DUMP_PATH', 'dumps')
+        call_command('dr_dump', '-o', 'dump_dir=%s' % dump_path)
         return [
             dump_path.replace("%s/" % os.getcwd(), ''),
         ]

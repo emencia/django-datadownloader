@@ -103,11 +103,13 @@ class Command(BaseCommand):
             self._load_media(archive)
 
     def _load_db(self, archive):
-        members = [m for m in archive.getmembers() if m.name.startswith('dumps/')]
+        dump_path = getattr(settings, 'DATA_DOWNLOADER_DUMP_PATH', 'dumps')
+        members = [m for m in archive.getmembers() if m.name.startswith(dump_path)]
         try:
             tmpdir = tempfile.mkdtemp(prefix='datadownloader')
             archive.extractall(tmpdir, members)
-            call_command('dr_load', manifest=os.path.join(tmpdir, 'dumps/drdump.manifest'))
+            call_command('dr_load', manifest=os.path.join(tmpdir, dump_path,
+                                                          'drdump.manifest'))
         finally:
             shutil.rmtree(tmpdir)
 
