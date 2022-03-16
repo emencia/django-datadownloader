@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.2.1 - 2022/03/16
+------------------
+
+Correct bug when DATA_DOWNLOADER_DUMP_PATH is not relative
+
 1.2.0 - 2021/11/23
 ------------------
 
