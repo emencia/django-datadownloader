@@ -104,6 +104,8 @@ class Command(BaseCommand):
 
     def _load_db(self, archive):
         dump_path = getattr(settings, 'DATA_DOWNLOADER_DUMP_PATH', 'dumps')
+        if dump_path.startswith('/'):
+            dump_path = os.path.join(*dump_path.split(os.sep)[2:])
         members = [m for m in archive.getmembers() if m.name.startswith(dump_path)]
         try:
             tmpdir = tempfile.mkdtemp(prefix='datadownloader')
